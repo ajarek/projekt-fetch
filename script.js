@@ -1,12 +1,14 @@
 import {User} from './class/user.js'
+import {Button} from './class/button.js'
 class App{
     constructor(){
     this.container = document.querySelector('.app')
-      this.users=''  
+      this.users=null  
       this.url='https://randomuser.me/api?results=10'
       this.hasError = null
     }
-  async  loadUsers() {
+
+async  loadUsers() {
     try{
     const response = await fetch(this.url)
     this.users = await response.json()
@@ -17,20 +19,32 @@ class App{
        this.setError(err)
       }
   }
+
 setError(err){
     console.log(err)
     this.hasError = err
     this.container.innerHTML = `<div class="error">${err.message}</div>`   
 }
-render(){
-    this.container.innerHTML = ''
-    this.loadUsers().then(users => {
+
+createUsers(){
+    const div = document.createElement('div')
+    this.users = this.loadUsers().then(users => {
         users.forEach(user => {
-            const userComponent = new User(user)
-            this.container.innerHTML += userComponent.render()
+            const userComponent = new User(user)       
+            div.innerHTML += userComponent.render()
+            this.container.appendChild(div)
         })
+       
     })
+   this.render()
 }
+
+render(){
+   this.container.innerHTML = ''
+    const button = new Button('Load users', () =>this.createUsers())
+    this.container.prepend(button.render())
+}
+
 }
 const app = new App()
 app.render()
