@@ -10,9 +10,9 @@ class App{
 
 async  loadUsers() {
     try{
-    const response = await fetch(this.url)
+    const response = await fetch(this.url) 
     this.users = await response.json()
-    return this.users.results
+    return this.users
     }
     catch(err) {
         // łapie błędy zarówno w Fetch i Response.Json
@@ -29,7 +29,7 @@ setError(err){
 createUsers(){
     const div = document.createElement('div')
     this.users = this.loadUsers().then(users => {
-        users.forEach(user => {
+        users.results.forEach(user => {
             const userComponent = new User(user)       
             div.innerHTML += userComponent.render()
             this.container.appendChild(div)
